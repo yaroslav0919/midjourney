@@ -1,13 +1,17 @@
 import styled from "styled-components";
 import { Loader } from "../../components/Loader";
 import { useEffect, useState } from "react";
-
+import {
+    getLineCount,
+    getLetterCount,
+    getRandomText,
+} from "../../utils/helper";
+import { fontSize } from "../../constants";
 const Wrapper = styled.div`
     position: relative;
     width: 100vw;
     height: 100vh;
 `;
-const fontSize = 20;
 
 export const Editor = () => {
     const [textArray, setTextArray]: [any[], any] = useState([]);
@@ -19,7 +23,6 @@ export const Editor = () => {
 
         for (let i = 0; i < lineCount; i++) {
             let spacePosition = null;
-            // if (Math.abs(lineCount / 2 - i) < (lineCount / 2) * (index / 100)) {
             if (
                 i < (lineCount / 2) * (index / 100) ||
                 i > lineCount - (lineCount / 2) * (index / 100)
@@ -68,44 +71,6 @@ export const Editor = () => {
             </svg>
         </Wrapper>
     );
-};
-
-const isRange = (value: number, key: number, offset: number) => {
-    return value <= key + offset && value >= key - offset;
-};
-const getRandomText = (length: number, spacePosition: any) => {
-    let result = "";
-
-    const characters = "abcdefghijklmnopqrstuvwxyz0123456789/?-$[]";
-    const charactersLength = characters.length;
-
-    for (let i = 0; i < length; i++) {
-        if (
-            spacePosition &&
-            (isRange(i, length / 2 - spacePosition, 1) ||
-                isRange(i, length / 2 + spacePosition, 1))
-        ) {
-            result += "  ";
-        } else {
-            result += characters.charAt(
-                Math.floor(Math.random() * charactersLength)
-            );
-        }
-    }
-    return result;
-};
-
-const getLetterCount = () => {
-    const font = `${fontSize}px arial`;
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d") as any;
-    context.font = font;
-    const metrics = context.measureText("h");
-    return Math.round((window.innerWidth * 0.9) / metrics.width);
-};
-
-const getLineCount = () => {
-    return Math.round((window.innerHeight * 0.9) / fontSize);
 };
 
 export default Editor;
