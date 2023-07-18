@@ -14,20 +14,39 @@ export const Editor = () => {
 
     const setRandomTextArray = (index: number) => {
         const newTextArray = [];
-        const lineCount = getLineCount(fontSize);
-        const letterCount = getLetterCount(`${fontSize}px arial`);
+        const lineCount = getLineCount();
+        const letterCount = getLetterCount();
 
         for (let i = 0; i < lineCount; i++) {
-            newTextArray.push(getRandomText(letterCount, index));
+            let spacePosition = null;
+            // if (Math.abs(lineCount / 2 - i) < (lineCount / 2) * (index / 100)) {
+            if (
+                i < (lineCount / 2) * (index / 100) ||
+                i > lineCount - (lineCount / 2) * (index / 100)
+            ) {
+            } else {
+                spacePosition = Math.round(
+                    Math.sin(
+                        (i * Math.PI) / (lineCount * ((100 - index) / 100))
+                    ) *
+                        (letterCount / 2) *
+                        ((100 - index) / 100)
+                );
+            }
+            console.log(spacePosition);
+
+            newTextArray.push(getRandomText(letterCount, spacePosition));
         }
         setTextArray(newTextArray);
     };
+
     let index = 0;
+
     useEffect(() => {
         setInterval(() => {
-            setRandomTextArray(index);
-            index++;
-            if (index >= getLetterCount(`${fontSize}px arial`)) index = 0;
+            setRandomTextArray(Math.sin((Math.PI * 2 * index) / 100) * 100);
+
+            index += 2;
         }, 200);
     }, []);
 
@@ -51,27 +70,33 @@ export const Editor = () => {
     );
 };
 
-const getRandomText = (length: number, spaceCount: number) => {
+const isRange = (value: number, key: number, offset: number) => {
+    return value <= key + offset && value >= key - offset;
+};
+const getRandomText = (length: number, spacePosition: any) => {
     let result = "";
 
     const characters = "abcdefghijklmnopqrstuvwxyz0123456789/?-$[]";
     const charactersLength = characters.length;
-    let counter = 0;
 
-    while (counter < length) {
-        if (Math.random() < 0.5) {
+    for (let i = 0; i < length; i++) {
+        if (
+            spacePosition &&
+            (isRange(i, length / 2 - spacePosition, 1) ||
+                isRange(i, length / 2 + spacePosition, 1))
+        ) {
+            result += "  ";
+        } else {
             result += characters.charAt(
                 Math.floor(Math.random() * charactersLength)
             );
-        } else {
-            result += "  ";
         }
-        counter += 1;
     }
     return result;
 };
 
-const getLetterCount = (font: any) => {
+const getLetterCount = () => {
+    const font = `${fontSize}px arial`;
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d") as any;
     context.font = font;
@@ -79,8 +104,8 @@ const getLetterCount = (font: any) => {
     return Math.round((window.innerWidth * 0.9) / metrics.width);
 };
 
-const getLineCount = (fs: number) => {
-    return Math.round((window.innerHeight * 0.9) / fs);
+const getLineCount = () => {
+    return Math.round((window.innerHeight * 0.9) / fontSize);
 };
 
 export default Editor;
