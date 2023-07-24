@@ -26,13 +26,19 @@ const agenceTitle = [
     String.raw`         |___/                                                                                                                                        `,
 ];
 const fleakTitle = [
-    String.raw`   ___ _            _                      _ _       `,
-    String.raw`  / __\ | ___  __ _| | __   /\/\   ___  __| (_) __ _ `,
-    String.raw` / _\ | |/ _ \/ _\ | |/ /  /    \ / _ \/ _\ | |/ _\ |`,
-    String.raw`/ /   | |  __/ (_| |   <  / /\/\ \  __/ (_| | | (_| |`,
-    String.raw`\/    |_|\___|\__,_|_|\_\ \/    \/\___|\__,_|_|\__,_|`,
+    String.raw`________            _                      _ _       `,
+    String.raw`|   __/ | ___  __ _| | __   /\/\   ___  __| (_) __ _ `,
+    String.raw`|  __/| |/ _ \/ _\ | |/ /  /    \ / _ \/ _\ | |/ _\ |`,
+    String.raw`| /   | |  __/ (_| |   <  / /\/\ \  __/ (_| | | (_| |`,
+    String.raw`|/    |_|\___|\__,_|_|\_\ \/    \/\___|\__,_|_|\__,_|`,
 ];
-
+const logoTitle = [
+    String.raw`_______`,
+    String.raw`|   __/`,
+    String.raw`|  __/ `,
+    String.raw`| /    `,
+    String.raw`|/     `,
+];
 export const Editor = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const titleRef = useRef<HTMLCanvasElement>(null);
@@ -103,13 +109,13 @@ export const Editor = () => {
                 fontSize = 5;
             }
 
-            console.log(fontSize);
             let currentTitle = agenceTitle;
 
             const titleMorphAnim = (
                 titleText: any,
                 time: number,
-                duration: number
+                duration: number,
+                fontSize: number
             ) => {
                 currentTitle = titleText;
 
@@ -162,27 +168,28 @@ export const Editor = () => {
                 draw();
             };
 
-            titleMorphAnim(agenceTitle, 3, 0.1);
-
             setTimeout(() => {
-                titleMorphAnim(fleakTitle, 3, 0.2);
-            }, 3000 + 2000);
+                titleMorphAnim(agenceTitle, 3, 0.1);
+                setTimeout(() => {
+                    titleMorphAnim(fleakTitle, 3, 0.2);
+                }, 3000 + 5000);
+            }, 3500);
 
-            window.addEventListener("resize", () => {
-                if (window.innerWidth >= 1920) {
-                    fontSize = 15;
-                } else if (window.innerWidth >= 768) {
-                    fontSize = 10;
-                } else {
-                    fontSize = 5;
-                }
+            // window.addEventListener("resize", () => {
+            //     if (window.innerWidth >= 1920) {
+            //         fontSize = 15;
+            //     } else if (window.innerWidth >= 768) {
+            //         fontSize = 10;
+            //     } else {
+            //         fontSize = 5;
+            //     }
 
-                const rows = currentTitle[0].length;
-                const columns = currentTitle.length;
+            //     const rows = currentTitle[0].length;
+            //     const columns = currentTitle.length;
 
-                canvas.width = (rows * fontSize) / 2;
-                canvas.height = columns * fontSize;
-            });
+            //     canvas.width = (rows * fontSize) / 2;
+            //     canvas.height = columns * fontSize;
+            // });
         }
     }, []);
     return (
