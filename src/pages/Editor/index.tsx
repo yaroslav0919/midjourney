@@ -109,21 +109,17 @@ export const Editor = () => {
                 fontSize = 5;
             }
 
-            let currentTitle = agenceTitle;
-
             const titleMorphAnim = (
                 titleText: any,
                 time: number,
                 duration: number,
-                fontSize: number
+                fontS: number = fontSize
             ) => {
-                currentTitle = titleText;
+                const rows = titleText[0].length;
+                const columns = titleText.length;
 
-                const rows = currentTitle[0].length;
-                const columns = currentTitle.length;
-
-                canvas.width = (rows * fontSize) / 2;
-                canvas.height = columns * fontSize;
+                canvas.width = (rows * fontS) / 2;
+                canvas.height = columns * fontS;
 
                 let char = [] as any[];
                 titleText.forEach((text: string) => {
@@ -147,15 +143,15 @@ export const Editor = () => {
                                         )
                                     ];
                                 ctx.fillStyle = "#fff";
-                                ctx.font = `${fontSize}px Courier Prime`;
+                                ctx.font = `${fontS}px Courier Prime`;
 
                                 ctx.fillText(
                                     1 - repeatCount / (time / duration) >=
                                         i / rowLen
                                         ? charactor
                                         : text,
-                                    (i * fontSize) / 2,
-                                    index * fontSize
+                                    (i * fontS) / 2,
+                                    index * fontS
                                 );
                             }
                         });
@@ -167,13 +163,21 @@ export const Editor = () => {
 
                 draw();
             };
-
-            setTimeout(() => {
-                titleMorphAnim(agenceTitle, 3, 0.1);
+            const loop = () => {
                 setTimeout(() => {
-                    titleMorphAnim(fleakTitle, 3, 0.2);
-                }, 3000 + 5000);
-            }, 3500);
+                    titleMorphAnim(agenceTitle, 3, 0.1);
+                    setTimeout(() => {
+                        titleMorphAnim(fleakTitle, 3, 0.1);
+                        setTimeout(() => {
+                            titleMorphAnim(logoTitle, 3, 0.1, 50);
+                            setTimeout(() => {
+                                loop();
+                            }, 3000 + 8000);
+                        }, 3000 + 5000);
+                    }, 3000 + 5000);
+                }, 3500);
+            };
+            loop();
 
             // window.addEventListener("resize", () => {
             //     if (window.innerWidth >= 1920) {
