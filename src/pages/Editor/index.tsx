@@ -32,13 +32,6 @@ const fleakTitle = [
     String.raw`| /   | |  __/ (_| |   <  / /\/\ \  __/ (_| | | (_| |`,
     String.raw`|/    |_|\___|\__,_|_|\_\ \/    \/\___|\__,_|_|\__,_|`,
 ];
-const logoTitle = [
-    String.raw`_______`,
-    String.raw`|   __/`,
-    String.raw`|  __/ `,
-    String.raw`| /    `,
-    String.raw`|/     `,
-];
 export const Editor = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const titleRef = useRef<HTMLCanvasElement>(null);
@@ -169,10 +162,7 @@ export const Editor = () => {
                     setTimeout(() => {
                         titleMorphAnim(fleakTitle, 3, 0.1);
                         setTimeout(() => {
-                            titleMorphAnim(logoTitle, 3, 0.1, 50);
-                            setTimeout(() => {
-                                loop();
-                            }, 3000 + 8000);
+                            loop();
                         }, 3000 + 5000);
                     }, 3000 + 5000);
                 }, 3500);
