@@ -182,22 +182,6 @@ export const Editor = () => {
                 }, 3700);
             };
             loop();
-
-            // window.addEventListener("resize", () => {
-            //     if (window.innerWidth >= 1920) {
-            //         fontSize = 15;
-            //     } else if (window.innerWidth >= 768) {
-            //         fontSize = 10;
-            //     } else {
-            //         fontSize = 5;
-            //     }
-
-            //     const rows = currentTitle[0].length;
-            //     const columns = currentTitle.length;
-
-            //     canvas.width = (rows * fontSize) / 2;
-            //     canvas.height = columns * fontSize;
-            // });
         }
     }, []);
     return (
