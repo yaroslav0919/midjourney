@@ -25,6 +25,14 @@ const agenceTitle = [
     String.raw`  \_/ \_/\__, |\___|_| |_|\___\___|  \__,_|\___|  \___\___/|_| |_| |_|_| |_| |_|\__,_|_| |_|_|\___\__,_|\__|_|\___/|_| |_| |___/\__,_|_|___/___/\___| `,
     String.raw`         |___/                                                                                                                                        `,
 ];
+const agenceTitleMobile = [
+    String.raw`     _                                   _                                                  _           _   _             `,
+    String.raw`    /_\   __ _  ___ _ __   ___ ___    __| | ___    ___ ___  _ __ ___  _ __ ___  _   _ _ __ (_) ___ __ _| |_(_) ___  _ __  `,
+    String.raw`   //_\\ / _\ |/ _ \ '_ \ / __/ _ \  / _\ |/ _ \  / __/ _ \| '_ \ _ \| '_ \ _ \| | | | '_ \| |/ __/ _\ | __| |/ _ \| '_ \ `,
+    String.raw`  /  _  \ (_| |  __/ | | | (_|  __/ | (_| |  __/ | (_| (_) | | | | | | | | | | | |_| | | | | | (_| (_| | |_| | (_) | | | |`,
+    String.raw`  \_/ \_/\__, |\___|_| |_|\___\___|  \__,_|\___|  \___\___/|_| |_| |_|_| |_| |_|\__,_|_| |_|_|\___\__,_|\__|_|\___/|_| |_|`,
+    String.raw`         |___/                                                                                                            `,
+];
 const fleakTitle = [
     String.raw`________            _                      _ _       `,
     String.raw`|   __/ | ___  __ _| | __   /\/\   ___  __| (_) __ _ `,
@@ -158,14 +166,20 @@ export const Editor = () => {
             };
             const loop = () => {
                 setTimeout(() => {
-                    titleMorphAnim(agenceTitle, 3, 0.1);
+                    titleMorphAnim(
+                        window.innerWidth > 768
+                            ? agenceTitle
+                            : agenceTitleMobile,
+                        2,
+                        0.1
+                    );
                     setTimeout(() => {
-                        titleMorphAnim(fleakTitle, 3, 0.1);
+                        titleMorphAnim(fleakTitle, 2, 0.1);
                         setTimeout(() => {
                             loop();
                         }, 3000 + 5000);
                     }, 3000 + 5000);
-                }, 3500);
+                }, 3700);
             };
             loop();
 
@@ -187,8 +201,8 @@ export const Editor = () => {
         }
     }, []);
     return (
-        <Wrapper className="flex justify-center items-center bg-[#0A062E] ">
-            <canvas ref={canvasRef} className="rounded-xl" />
+        <Wrapper className="flex justify-center items-center bg-[#0A062E]">
+            <canvas ref={canvasRef} className="rounded-xl max-w-[1200px]" />
             <canvas ref={titleRef} className="absolute" />
         </Wrapper>
     );
