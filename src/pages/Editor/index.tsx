@@ -40,6 +40,7 @@ const fleakTitle = [
     String.raw`| /   | |  __/ (_| |   <  / /\/\ \  __/ (_| | | (_| |`,
     String.raw`|/    |_|\___|\__,_|_|\_\ \/    \/\___|\__,_|_|\__,_|`,
 ];
+
 export const Editor = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const titleRef = useRef<HTMLCanvasElement>(null);
@@ -170,7 +171,7 @@ export const Editor = () => {
                         window.innerWidth > 768
                             ? agenceTitle
                             : agenceTitleMobile,
-                        2,
+                        3,
                         0.1
                     );
                     setTimeout(() => {
@@ -181,6 +182,7 @@ export const Editor = () => {
                     }, 3000 + 5000);
                 }, 3700);
             };
+
             loop();
         }
     }, []);
