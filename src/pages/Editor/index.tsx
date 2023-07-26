@@ -49,6 +49,10 @@ export const Editor = () => {
             const canvas = canvasRef.current;
             const ctx = canvas.getContext("2d") as any;
             canvas.width = window.innerWidth * 0.9;
+            if (canvas.width > 1200) {
+                console.log("bigger");
+                canvas.width = 1200;
+            }
             canvas.height = window.innerHeight * 0.8;
 
             let letters =
@@ -86,10 +90,10 @@ export const Editor = () => {
 
             setInterval(draw, 33);
 
-            window.addEventListener("resize", () => {
-                canvas.width = window.innerWidth * 0.9;
-                canvas.height = window.innerHeight * 0.8;
-            });
+            // window.addEventListener("resize", () => {
+            //     canvas.width = window.innerWidth * 0.9;
+            //     canvas.height = window.innerHeight * 0.8;
+            // });
         }
     }, []);
 
@@ -103,12 +107,12 @@ export const Editor = () => {
 
             let fontSize = 10;
 
-            if (window.innerWidth >= 1920) {
+            if (window.innerWidth >= 1500) {
                 fontSize = 15;
-            } else if (window.innerWidth >= 768) {
-                fontSize = 10;
             } else {
-                fontSize = 5;
+                fontSize = Math.round(
+                    window.innerWidth / (window.innerWidth > 768 ? 90 : 70)
+                );
             }
 
             const titleMorphAnim = (
@@ -188,7 +192,7 @@ export const Editor = () => {
     }, []);
     return (
         <Wrapper className="flex justify-center items-center bg-[#0A062E]">
-            <canvas ref={canvasRef} className="rounded-xl max-w-[1200px]" />
+            <canvas ref={canvasRef} className="rounded-xl" />
             <canvas ref={titleRef} className="absolute" />
         </Wrapper>
     );
