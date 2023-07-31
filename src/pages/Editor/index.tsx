@@ -253,6 +253,13 @@ export const Editor = () => {
             };
 
             document.addEventListener("visibilitychange", visiableCheck);
+            let now = Date.now();
+            const anim = () => {
+                console.log(Date.now() - now);
+                now = Date.now();
+                requestAnimationFrame(anim);
+            };
+            anim();
         }
     }, []);
 
