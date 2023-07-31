@@ -42,18 +42,21 @@ const fleakTitle = [
 ];
 
 export const Editor = () => {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const titleRef = useRef<HTMLCanvasElement>(null);
+    // const canvasRef = useRef<HTMLCanvasElement>(null);
+    // const titleRef = useRef<HTMLCanvasElement>(null);
+    const contentRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
-        if (canvasRef.current) {
-            const canvas = canvasRef.current;
+        if (contentRef.current) {
+            const content = contentRef.current;
+            const canvas = document.createElement("canvas");
+
+            canvas.width = content.offsetWidth;
+            canvas.height = content.offsetHeight * 0.8;
+            canvas.style.position = "absolute";
+            content.appendChild(canvas);
+
             const ctx = canvas.getContext("2d") as any;
-            canvas.width = window.innerWidth * 0.9;
-            if (canvas.width > 1200) {
-                console.log("bigger");
-                canvas.width = 1200;
-            }
-            canvas.height = window.innerHeight * 0.8;
 
             let letters =
                 "ABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZABCDEFGHIJKLMNOPQRSTUVXYZ";
@@ -88,44 +91,65 @@ export const Editor = () => {
                 }
             };
 
-            setInterval(draw, 33);
-
-            // window.addEventListener("resize", () => {
-            //     canvas.width = window.innerWidth * 0.9;
-            //     canvas.height = window.innerHeight * 0.8;
-            // });
+            setInterval(draw, (2000 * fontSize) / canvas.height);
         }
     }, []);
 
     useEffect(() => {
-        if (titleRef.current) {
-            const canvas = titleRef.current;
-            const ctx = canvas.getContext("2d") as any;
+        if (contentRef.current) {
+            const content = contentRef.current;
 
-            let letters = "(/?-$[]@%^&*)!~:<>|";
-            const letterArray = letters.split("");
+            const canvas2 = document.createElement("canvas") as any;
+            canvas2.style.position = "absolute";
+            content.appendChild(canvas2);
+            const ctx2 = canvas2.getContext("2d") as any;
+            let letters2 = "(/?-$[]@%^&*)!~:<>|";
+            // const letterArray = letters2.split("");
+            let fontSize2: number;
 
-            let fontSize = 10;
-
-            if (window.innerWidth >= 1500) {
-                fontSize = 15;
+            if (content.offsetWidth >= 1200) {
+                fontSize2 = 16.6;
             } else {
-                fontSize = Math.round(
-                    window.innerWidth / (window.innerWidth > 768 ? 90 : 70)
+                fontSize2 = Math.round(
+                    content.offsetWidth / (content.offsetWidth > 768 ? 90 : 70)
                 );
             }
+
+            let interval: any;
+            let interval1: any;
+            let interval2: any;
+            let interval3: any;
+            let interval4: any;
+            let reduceInterval: any;
+
+            const fadeOutAnim = (el: any, duration: number) => {
+                let opacity = 1;
+                const reduce = () => {
+                    console.log("reduce", opacity);
+
+                    if (opacity <= 0) {
+                        clearInterval(reduceInterval);
+                    } else {
+                        el.style.opacity = opacity;
+                        opacity = Math.round((opacity - 0.01) * 100) / 100;
+                    }
+                };
+                reduceInterval = setInterval(reduce, duration * 10);
+            };
 
             const titleMorphAnim = (
                 titleText: any,
                 time: number,
                 duration: number,
-                fontS: number = fontSize
+                onComplete: Function,
+                fontS: number = fontSize2
             ) => {
+                canvas2.style.opacity = 1;
                 const rows = titleText[0].length;
                 const columns = titleText.length;
 
-                canvas.width = (rows * fontS) / 2;
-                canvas.height = columns * fontS;
+                canvas2.width = (rows * fontS) / 2;
+                canvas2.height = columns * fontS;
 
                 let char = [] as any[];
                 titleText.forEach((text: string) => {
@@ -136,22 +160,22 @@ export const Editor = () => {
                 const rowLen = char[0].length;
 
                 const draw = () => {
-                    ctx.fillStyle = "#0A062E";
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx2.fillStyle = "#0A062E";
+                    ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
 
                     char.forEach((line: [], index: number) => {
                         line.forEach((charactor: string, i: number) => {
                             if (charactor !== " ") {
                                 var text =
-                                    letters[
+                                    letters2[
                                         Math.floor(
-                                            Math.random() * letters.length
+                                            Math.random() * letters2.length
                                         )
                                     ];
-                                ctx.fillStyle = "#fff";
-                                ctx.font = `${fontS}px Courier Prime`;
+                                ctx2.fillStyle = "#fff";
+                                ctx2.font = `${fontS}px Courier Prime`;
 
-                                ctx.fillText(
+                                ctx2.fillText(
                                     1 - repeatCount / (time / duration) >=
                                         i / rowLen
                                         ? charactor
@@ -163,37 +187,81 @@ export const Editor = () => {
                         });
                     });
                     repeatCount--;
-                    if (repeatCount < 0) return;
-                    if (repeatCount >= 0) setTimeout(draw, duration * 1000);
+                    if (repeatCount < 0) {
+                        interval3 = setInterval(() => {
+                            clearInterval(interval3);
+                            onComplete(canvas2, 0.2);
+                        }, 3500);
+                    } else if (repeatCount >= 0) {
+                        interval4 = setInterval(() => {
+                            clearInterval(interval4);
+                            draw();
+                        }, duration * 1000);
+                    }
                 };
 
                 draw();
             };
+
             const loop = () => {
-                setTimeout(() => {
+                titleMorphAnim(
+                    content.offsetWidth > 768 ? agenceTitle : agenceTitleMobile,
+                    1.5,
+                    0.05,
+                    fadeOutAnim
+                );
+                interval1 = setInterval(() => {
+                    clearInterval(interval1);
                     titleMorphAnim(
-                        window.innerWidth > 768
-                            ? agenceTitle
-                            : agenceTitleMobile,
-                        3,
-                        0.1
+                        fleakTitle,
+                        1,
+                        0.05,
+                        fadeOutAnim,
+                        content.offsetWidth > 768 ? fontSize2 : fontSize2 * 2
                     );
-                    setTimeout(() => {
-                        titleMorphAnim(fleakTitle, 2, 0.1);
-                        setTimeout(() => {
-                            loop();
-                        }, 3000 + 5000);
-                    }, 3000 + 5000);
-                }, 3700);
+                    interval2 = setInterval(() => {
+                        clearInterval(interval2);
+                        loop();
+                    }, 1000 + 3700 + 800);
+                }, 1500 + 3700 + 800);
             };
 
-            loop();
+            interval = setInterval(() => {
+                clearInterval(interval);
+                loop();
+            }, 3000);
+
+            const visiableCheck = () => {
+                if (document.hidden) {
+                    console.log("out");
+                    clearInterval(interval);
+                    clearInterval(interval1);
+                    clearInterval(interval2);
+                    clearInterval(interval3);
+                    clearInterval(interval4);
+                    clearInterval(reduceInterval);
+                } else {
+                    console.log("in");
+                    clearInterval(interval);
+                    clearInterval(interval1);
+                    clearInterval(interval2);
+                    clearInterval(interval3);
+                    clearInterval(interval4);
+                    clearInterval(reduceInterval);
+                    loop();
+                }
+            };
+
+            document.addEventListener("visibilitychange", visiableCheck);
         }
     }, []);
+
     return (
         <Wrapper className="flex justify-center items-center bg-[#0A062E]">
-            <canvas ref={canvasRef} className="rounded-xl" />
-            <canvas ref={titleRef} className="absolute" />
+            <div
+                className="w-full max-w-[1200px] h-full flex items-center justify-center"
+                ref={contentRef}
+            ></div>
         </Wrapper>
     );
 };
